@@ -119,11 +119,13 @@
             videoInputDevices.forEach((element) => {
               console.log(element)
               if(element.label.toLowerCase().search("back") >-1) {
+                selectedDeviceId = element.deviceId
                 const sourceOption = document.createElement('option')
                 sourceOption.text = element.label
                 sourceOption.value = element.deviceId
                 sourceSelect.appendChild(sourceOption)
                 findBackCam = true
+                return
               }
             })
             if (!findBackCam) { // 确保至少有一个摄像头
@@ -137,10 +139,12 @@
               selectedDeviceId = sourceSelect.value;
               codeReader.reset()
               document.getElementById('result').textContent = '';
+              decodeContinuously(codeReader, selectedDeviceId);
             };
 
             const sourceSelectPanel = document.getElementById('sourceSelectPanel')
             sourceSelectPanel.style.display = 'block'
+            
             decodeContinuously(codeReader, selectedDeviceId);
           }
 
