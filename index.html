@@ -18,23 +18,18 @@
   <main class="wrapper" style="padding-top:2em">
 
     <section class="container" id="demo-content">
-      <h1 class="title">Scan QR Code from Video Camera</h1>
+      <h1 class="title">SNF China Product Check</h1>
 
-      <p>
-        <a class="button-small button-outline" href="../../index.html">HOME 🏡</a>
-      </p>
 
-      <p>This example shows how to scan a QR code with ZXing javascript library from the device video camera. If more
-        than one video input devices are available (for example front and back camera) the example shows how to read
-        them and use a select to change the input device.</p>
+      <p>Scan the QR code in the lable</p>
 
-      <div>
+      <div style="display:none;">
         <a class="button" id="startButton">Start</a>
         <a class="button" id="resetButton">Reset</a>
       </div>
 
       <div>
-        <video id="video" width="300" height="200" style="border: 1px solid gray"></video>
+        <video id="video" width="80%" height="400" style="border: 1px solid gray"></video>
       </div>
 
       <div id="sourceSelectPanel" style="display:none">
@@ -43,7 +38,7 @@
         </select>
       </div>
 
-      <div style="display: table">
+      <div style="display:none;">
         <label for="decoding-style"> Decoding Style:</label>
         <select id="decoding-style" size="1">
           <option value="once">Decode once</option>
@@ -54,14 +49,11 @@
       <label>Result:</label>
       <pre><code id="result"></code></pre>
 
-      <p>See the <a href="https://github.com/zxing-js/library/tree/master/docs/examples/qr-camera/">source code</a> for
-        this example.</p>
     </section>
 
     <footer class="footer">
       <section class="container">
-        <p>ZXing TypeScript Demo. Licensed under the <a target="_blank"
-            href="https://github.com/zxing-js/library#license" title="MIT">MIT</a>.</p>
+        <p>SNF Group | All Rights Reserved.</p>
       </section>
     </footer>
 
@@ -123,24 +115,39 @@
           const sourceSelect = document.getElementById('sourceSelect')
           selectedDeviceId = videoInputDevices[0].deviceId
           if (videoInputDevices.length >= 1) {
+            let findBackCam = false
             videoInputDevices.forEach((element) => {
-              const sourceOption = document.createElement('option')
-              sourceOption.text = element.label
-              sourceOption.value = element.deviceId
-              sourceSelect.appendChild(sourceOption)
+              console.log(element)
+              if(element.label.toLowerCase().search("back") >-1) {
+                const sourceOption = document.createElement('option')
+                sourceOption.text = element.label
+                sourceOption.value = element.deviceId
+                sourceSelect.appendChild(sourceOption)
+                findBackCam = true
+              }
             })
+            if (!findBackCam) { // 确保至少有一个摄像头
+              const sourceOption = document.createElement('option')
+                sourceOption.text = videoInputDevices[0].label
+                sourceOption.value = videoInputDevices[0].deviceId
+                sourceSelect.appendChild(sourceOption)
+            }
 
             sourceSelect.onchange = () => {
               selectedDeviceId = sourceSelect.value;
+              codeReader.reset()
+              document.getElementById('result').textContent = '';
             };
 
             const sourceSelectPanel = document.getElementById('sourceSelectPanel')
             sourceSelectPanel.style.display = 'block'
+            decodeContinuously(codeReader, selectedDeviceId);
           }
 
           document.getElementById('startButton').addEventListener('click', () => {
 
-            const decodingStyle = document.getElementById('decoding-style').value;
+            //const decodingStyle = document.getElementById('decoding-style').value;
+            const decodingStyle = 'continuously'
 
             if (decodingStyle == "once") {
               decodeOnce(codeReader, selectedDeviceId);
