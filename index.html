@@ -29,7 +29,7 @@
       </div>
 
       <div>
-        <video id="video" width="80%" height="400" style="border: 1px solid gray"></video>
+        <video id="video" width="100%" height="300" style="border: 1px solid gray"></video>
       </div>
 
       <div id="sourceSelectPanel" style="display:none">
@@ -128,10 +128,12 @@
                 return
               }
             })
-            if (!findBackCam) { // 确保至少有一个摄像头
+            if (!findBackCam) { // 确保至少有一个后置摄像头
               const sourceOption = document.createElement('option')
-                sourceOption.text = videoInputDevices[0].label
-                sourceOption.value = videoInputDevices[0].deviceId
+                let element = videoInputDevices[videoInputDevices.length-1]
+                selectedDeviceId = element.deviceId
+                sourceOption.text = element.label
+                sourceOption.value = element.deviceId
                 sourceSelect.appendChild(sourceOption)
             }
 
